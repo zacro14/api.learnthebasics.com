@@ -1,9 +1,9 @@
 import { Controller, Get, Post } from '@nestjs/common';
-import { TrasnpocalculatorService } from './transpocalculator.service';
+import { TranspocalculatorService } from './transpocalculator.service';
 
 @Controller('calculate')
 export class CalculateTranspo {
-  constructor(private calculateTranspo: TrasnpocalculatorService) {}
+  constructor(private calculateTranspo: TranspocalculatorService) {}
 
   @Get('hello')
   greet() {

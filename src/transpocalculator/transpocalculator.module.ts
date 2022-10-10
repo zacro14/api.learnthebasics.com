@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CalculateTranspo } from './transpocalculator.controller';
-import { TrasnpocalculatorService } from './transpocalculator.service';
+import { TranspocalculatorService } from './transpocalculator.service';
 
 @Module({
   controllers: [CalculateTranspo],
-  providers: [TrasnpocalculatorService],
+  providers: [TranspocalculatorService],
 })
 export class TranspocalculatorModule {}
