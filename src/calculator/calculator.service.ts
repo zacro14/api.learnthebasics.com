@@ -1,14 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CalculatorDto } from './dto/calculator.dto';
+import { IncentiveDto, TranpoDto } from './dto';
 
 @Injectable()
-export class TranspocalculatorService {
-  calaculate() {
-    return {
-      message: 'Hello Junel',
-    };
-  }
-  calculateTranspo(data: CalculatorDto) {
+export class CalculatorService {
+  cumputeTranspo(data: TranpoDto) {
     const { amount, name, no_of_days } = data;
     const result = amount * (no_of_days || 1);
 
@@ -17,6 +12,13 @@ export class TranspocalculatorService {
       name: name,
       no_of_days: no_of_days,
       amount_per_day: amount,
+    };
+  }
+
+  get13MonthPay(data: IncentiveDto) {
+    console.log(data);
+    return {
+      amount: 'hello',
     };
   }
 }

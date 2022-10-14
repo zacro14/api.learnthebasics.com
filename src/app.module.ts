@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { TranspocalculatorModule } from './transpocalculator/transpocalculator.module';
+import { CalculatorModule } from './calculator/calculator.module';
 
 @Module({
-  imports: [TranspocalculatorModule],
+  imports: [CalculatorModule],
 })
 export class AppModule {}
