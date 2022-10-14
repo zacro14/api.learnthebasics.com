@@ -1,4 +1,6 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { CalculatorDto } from './dto/calculator.dto';
+import { CalculateResult } from './interfaces/calculator.interface';
 import { TranspocalculatorService } from './transpocalculator.service';
 
 @Controller('calculate')
@@ -10,7 +12,7 @@ export class CalculateTranspo {
     return this.calculateTranspo.calaculate();
   }
   @Post()
-  calculate() {
-    return this.calculateTranspo.greet();
+  calculate(@Body() calculate: CalculatorDto): CalculateResult {
+    return this.calculateTranspo.calculateTranspo(calculate);
   }
 }
