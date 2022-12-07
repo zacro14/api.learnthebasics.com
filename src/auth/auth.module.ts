@@ -4,6 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { jwtConstants } from './constant';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
 @Module({
@@ -13,7 +14,7 @@ import { LocalStrategy } from './local.strategy';
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.SECRET,
-        signOptions: { expiresIn: '60s' },
+        signOptions: { expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRATION },
       }),
     }),
   ],
