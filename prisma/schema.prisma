@@ -9,3 +9,19 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  TEACHER
+  USER
+  ADMIN
+}
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique
+  firstname String
+  lastname String
+  password String
+  isAdmin Boolean @default(false)
+  createdAt DateTime @default(now())
+  updaDatedAt DateTime @updatedAt @default(now())
+}
