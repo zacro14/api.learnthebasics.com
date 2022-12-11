@@ -5,8 +5,9 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Logger,
+  Param,
   Post,
-  Req,
 } from '@nestjs/common';
 import { CreatUserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
@@ -15,25 +16,33 @@ import { UsersService } from './users.service';
 export class UserController {
   constructor(private user: UsersService) {}
 
-  @Get()
-  async getUsers(): Promise<any> {
-    return 'hello users';
+  @Get(':id')
+  async getUsers(@Param() params) {
+    try {
+      const user = this.user.getUser(params.id);
+      if (user) {
+        return user;
+      }
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    } catch (error) {
+      Logger.error(error);
+    }
   }
 
   @Post()
   async createUser(@Body() createUser: CreatUserDto) {
     try {
-      console.log(createUser);
       const user = await this.user.createUser(createUser);
-      return user;
-
-      // return {
-      //   success: true,
-      //   message: 'user created successfully',
-      // };
+      if (user) {
+        return {
+          success: true,
+          message: 'user created successfully',
+        };
+      } else {
+        throw new BadRequestException('Cannot create user');
+      }
     } catch (error) {
-      console.log(error);
-      throw new BadRequestException('Cannot create user');
+      Logger.error(error);
     }
   }
 }

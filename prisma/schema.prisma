@@ -24,4 +24,5 @@ model User {
   role Role @default(USER)
   createdAt DateTime @default(now())
   updaDatedAt DateTime @updatedAt @default(now())
+  isActive Boolean @default(true)
 }

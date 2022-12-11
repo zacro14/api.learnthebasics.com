@@ -1,5 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { PrismaService } from 'prisma.service';
 import { CreatUserDto } from './dto/user.dto';
@@ -9,27 +8,15 @@ type User = any;
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
-  private readonly users = [
-    {
-      user_id: 1,
-      username: 'junel',
-      password: 'Iknowyou',
-    },
-    {
-      user_id: 2,
-      username: 'sacro',
-      password: 'junel',
-    },
-  ];
 
-  async user(userUniqueId: Prisma.UserWhereUniqueInput): Promise<User | null> {
-    return this.prisma.user.findUnique({
-      where: userUniqueId,
-    });
-  }
-
-  async findone(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+  async getUser(userUniqueId: string): Promise<User | null> {
+    try {
+      return await this.prisma.user.findUnique({
+        where: { id: userUniqueId },
+      });
+    } catch (error) {
+      throw new NotFoundException();
+    }
   }
 
   async createUser(userData: CreatUserDto): Promise<any> {
