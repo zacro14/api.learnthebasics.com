@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
@@ -36,8 +37,16 @@ export class AuthService {
   async signin(data: AuthDto) {
     const user = await this.validateUser(data.username, data.password);
     if (!user) {
-      throw new BadRequestException('');
+      throw new BadRequestException('Invalid username or password');
     }
+
+    const tokens = await this.getTokens(user._id, user.username);
+    await this.updateRefreshToken(user._id, tokens.refreshToken);
+    return tokens;
+  }
+
+  async logout(userId: string) {
+    return this.userService.update(userId, { refreshToken: null });
   }
 
   hashData(data: string) {
