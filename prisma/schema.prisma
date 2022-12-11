@@ -18,6 +18,7 @@ enum Role {
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   email String @unique
+  username String @unique
   firstname String
   lastname String
   password String
@@ -25,4 +26,5 @@ model User {
   createdAt DateTime @default(now())
   updaDatedAt DateTime @updatedAt @default(now())
   isActive Boolean @default(true)
+  refreshToken String?
 }

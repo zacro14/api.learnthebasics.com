@@ -7,9 +7,11 @@ import {
   HttpStatus,
   Logger,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
-import { CreatUserDto } from './dto/user.dto';
+import { CreatUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('user')
@@ -29,20 +31,25 @@ export class UserController {
     }
   }
 
-  @Post()
-  async createUser(@Body() createUser: CreatUserDto) {
-    try {
-      const user = await this.user.createUser(createUser);
-      if (user) {
-        return {
-          success: true,
-          message: 'user created successfully',
-        };
-      } else {
-        throw new BadRequestException('Cannot create user');
-      }
-    } catch (error) {
-      Logger.error(error);
-    }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.user.update(id, updateUserDto);
   }
+
+  // @Post()
+  // async createUser(@Body() createUser: CreatUserDto) {
+  //   try {
+  //     const user = await this.user.createUser(createUser);
+  //     if (user) {
+  //       return {
+  //         success: true,
+  //         message: 'user created successfully',
+  //       };
+  //     } else {
+  //       throw new BadRequestException('Cannot create user');
+  //     }
+  //   } catch (error) {
+  //     Logger.error(error);
+  //   }
+  // }
 }

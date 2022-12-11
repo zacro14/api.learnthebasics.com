@@ -17,9 +17,15 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Body() login: LoginDto) {
+  async login(@Body() login: any) {
+    console.log(login);
     return this.authService.login(login);
   }
+
+  // @Post('/signup')
+  // async signup() {
+
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
