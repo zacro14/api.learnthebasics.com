@@ -5,9 +5,10 @@ import {
   Post,
   Req,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { Request as RequestExpress } from 'express';
+import { Request as RequestExpress, Response } from 'express';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
 import { CreatUserDto } from 'src/users/dto/create-user.dto';
@@ -25,8 +26,19 @@ export class AuthController {
   }
 
   @Post('signin')
-  signin(@Body() data: AuthDto) {
-    return this.authService.signin(data);
+  async signin(
+    @Body() data: AuthDto,
+    @Res({ passthrough: true })
+    res: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.authService.signin(data);
+
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+
+    return { accessToken };
   }
 
   @UseGuards(RefreshTokenGuard)

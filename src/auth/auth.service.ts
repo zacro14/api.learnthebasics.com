@@ -1,10 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
-  BadGatewayException,
   BadRequestException,
   ForbiddenException,
   Injectable,
-  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
@@ -12,7 +10,6 @@ import * as argon2 from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { CreatUserDto } from 'src/users/dto/create-user.dto';
 import { AuthDto } from './dto/auth.dto';
-import { BaseExceptionFilter } from '@nestjs/core';
 
 @Injectable()
 export class AuthService {
@@ -42,7 +39,11 @@ export class AuthService {
     }
 
     if (newUser) {
-      const tokens = await this.getTokens(newUser.id, newUser.username);
+      const tokens = await this.getTokens(
+        newUser.id,
+        newUser.username,
+        newUser.role,
+      );
       await this.updateRefreshToken(newUser.id, tokens.refreshToken);
       return tokens;
     }
@@ -58,7 +59,7 @@ export class AuthService {
       throw new BadRequestException('Invalid username or password');
     }
 
-    const tokens = await this.getTokens(user.id, user.username);
+    const tokens = await this.getTokens(user.id, user.username, user.role);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }
@@ -81,7 +82,7 @@ export class AuthService {
       throw new ForbiddenException();
     }
 
-    const tokens = await this.getTokens(user.id, user.username);
+    const tokens = await this.getTokens(user.id, user.username, user.role);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }
@@ -90,12 +91,13 @@ export class AuthService {
     return argon2.hash(data);
   }
 
-  async getTokens(userId: string, username: string) {
+  async getTokens(userId: string, username: string, role: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
           sub: userId,
           username,
+          role,
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
@@ -106,6 +108,7 @@ export class AuthService {
         {
           sub: userId,
           username,
+          role,
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
