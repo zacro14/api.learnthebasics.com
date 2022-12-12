@@ -9,7 +9,9 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { CreatUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
@@ -18,6 +20,7 @@ import { UsersService } from './users.service';
 export class UserController {
   constructor(private user: UsersService) {}
 
+  @UseGuards(AccessTokenGuard)
   @Get(':id')
   async getUsers(@Param() params) {
     try {

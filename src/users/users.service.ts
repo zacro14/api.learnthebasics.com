@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import * as argon2 from 'argon2';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'prisma.service';
 import { CreatUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -35,32 +39,35 @@ export class UsersService {
 
   async createUser(userData: CreatUserDto): Promise<any> {
     try {
-      const { password, email, firstname, lastname, username } = userData;
-      const hash = await argon2.hash(password);
-      if (hash) {
-        const user = await this.prisma.user.create({
-          data: {
-            email,
-            password: hash,
-            firstname,
-            lastname,
-            username,
-          },
-        });
-
-        return user;
+      const user = await this.prisma.user.create({
+        data: {
+          ...userData,
+        },
+      });
+      return user;
+    } catch (error) {
+      if (error.code === 'P2002') {
+        return error.code;
       }
-    } catch (error) {}
+      return error;
+    }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<any> {
-    return this.prisma.user.update({
-      where: {
-        id,
-      },
-      data: {
-        ...updateUserDto,
-      },
-    });
+  async update(userId: string, updateUserDto: UpdateUserDto): Promise<any> {
+    Logger.warn(updateUserDto);
+    console.log(userId);
+    try {
+      return await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          ...updateUserDto,
+        },
+      });
+    } catch (error) {
+      Logger.error(error);
+      return error;
+    }
   }
 }
