@@ -32,12 +32,11 @@ export class AuthController {
     res: Response,
   ) {
     const { accessToken, refreshToken } = await this.authService.signin(data);
-
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: true,
+      maxAge: 1209600,
     });
-
     return { accessToken };
   }
 
