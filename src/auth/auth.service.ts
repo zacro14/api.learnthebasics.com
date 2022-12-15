@@ -61,7 +61,10 @@ export class AuthService {
 
     const tokens = await this.getTokens(user.id, user.username, user.role);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    return {
+      ...tokens,
+      user: { id: user.id, username: user.username, role: user.role },
+    };
   }
 
   async logout(userId: string) {
@@ -112,7 +115,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-          expiresIn: '7d',
+          expiresIn: '30d',
         },
       ),
     ]);
