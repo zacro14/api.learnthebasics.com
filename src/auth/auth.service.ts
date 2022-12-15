@@ -128,8 +128,13 @@ export class AuthService {
     await this.userService.update(userId, { refreshToken: hashedRefreshToken });
   }
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findByUsername(username);
+  async validateUser(usernameOrEmail: string, pass: string): Promise<any> {
+    const userFromUserName = await this.userService.findByUsername(
+      usernameOrEmail,
+    );
+    const userFromEmail = await this.userService.findByEmail(usernameOrEmail);
+
+    const user = userFromEmail || userFromUserName;
     if (user && (await argon2.verify(user.password, pass))) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
