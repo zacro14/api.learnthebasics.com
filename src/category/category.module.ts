@@ -6,12 +6,6 @@ import { CategoryService } from './category.service';
 
 @Module({
   controllers: [CategoryController],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
-    CategoryService,
-  ],
+  providers: [CategoryService],
 })
 export class CategoryModule {}
