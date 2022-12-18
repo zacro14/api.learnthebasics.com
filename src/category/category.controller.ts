@@ -1,5 +1,10 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { RolesGuard } from 'src/common/guards/role.guard';
 import { Role } from 'src/common/role/role.enum';
@@ -16,6 +21,13 @@ export class CategoryController {
   async createCategory(
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<any> {
-    return createCategoryDto;
+    const lessonCategory = await this.category.createLessonCategory(
+      createCategoryDto,
+    );
+
+    if (!lessonCategory) {
+      throw new BadRequestException();
+    }
+    return lessonCategory;
   }
 }

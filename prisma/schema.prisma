@@ -28,3 +28,9 @@ model User {
   isActive Boolean @default(true)
   refreshToken String?
 }
+
+model LessonCategory {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  description String
+}
