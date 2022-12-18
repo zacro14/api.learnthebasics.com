@@ -31,21 +31,39 @@ export class AuthController {
     @Res({ passthrough: true })
     res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.signin(data);
+    const { accessToken, refreshToken, user } = await this.authService.signin(
+      data,
+    );
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: true,
       maxAge: 1209600,
     });
-    return { accessToken };
+    return { accessToken, user };
   }
 
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
-  refreshTokens(@Req() req: RequestExpress) {
+  async refreshTokens(
+    @Req() req: RequestExpress,
+    @Res({ passthrough: true })
+    res: Response,
+  ) {
     const userId = req.user['sub'];
-    const refreshToken = req.user['refreshToken'];
-    return this.authService.refreshToken(userId, refreshToken);
+    const oldRefreshToken = req.user['refreshToken'];
+
+    const { accessToken, refreshToken } = await this.authService.refreshToken(
+      userId,
+      oldRefreshToken,
+    );
+
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 1209600,
+    });
+
+    return { accessToken };
   }
 
   @UseGuards(AccessTokenGuard)
