@@ -35,7 +35,7 @@ export class UsersService {
     return null;
   }
 
-  async getUser(userUniqueId: string): Promise<User | any> {
+  async getUserById(userUniqueId: string): Promise<User | any> {
     try {
       const user = await this.prisma.user.findUnique({
         where: { id: userUniqueId },
@@ -56,7 +56,7 @@ export class UsersService {
         },
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
+      const { password, refreshToken, ...result } = user;
       return result;
     } catch (error) {
       if (error.code === 'P2002') {
