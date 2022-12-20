@@ -26,8 +26,9 @@ export class CategoryController {
     );
 
     if (!lessonCategory) {
-      throw new BadRequestException();
+      throw new BadRequestException('Please submit a valid properties');
     }
+
     return lessonCategory;
   }
 }
