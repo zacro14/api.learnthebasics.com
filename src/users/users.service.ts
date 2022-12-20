@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'prisma.service';
 import { CreatUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -20,7 +20,7 @@ export class UsersService {
     return null;
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<User | any> {
     const user = await this.prisma.user.findUnique({
       where: {
         email,
@@ -28,16 +28,21 @@ export class UsersService {
     });
 
     if (user) {
-      return user;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, refreshToken, ...result } = user;
+      return result;
     }
     return null;
   }
 
-  async getUser(userUniqueId: string): Promise<User | null> {
+  async getUser(userUniqueId: string): Promise<User | any> {
     try {
-      return await this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { id: userUniqueId },
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, refreshToken, ...result } = user;
+      return result;
     } catch (error) {
       return error;
     }
@@ -50,7 +55,9 @@ export class UsersService {
           ...userData,
         },
       });
-      return user;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...result } = user;
+      return result;
     } catch (error) {
       if (error.code === 'P2002') {
         return error.code;
@@ -70,7 +77,6 @@ export class UsersService {
         },
       });
     } catch (error) {
-      Logger.error(error);
       return error;
     }
   }
