@@ -21,4 +21,8 @@ export class CategoryService {
       return e.code;
     }
   }
+
+  async getAllLessonsCategory(): Promise<any> {
+    return await this.prisma.lessonCategory.findMany();
+  }
 }
