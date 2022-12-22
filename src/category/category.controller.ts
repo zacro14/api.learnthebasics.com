@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,9 @@ export class CategoryController {
   @Get()
   getCategories() {
     const res = this.categoryService.getAllLessonsCategory();
+    if (!res) {
+      throw new NotFoundException();
+    }
     return res;
   }
 
