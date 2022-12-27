@@ -41,7 +41,7 @@ export class UsersService {
         where: { id: userUniqueId },
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, refreshToken, ...result } = user;
+      const { password, ...result } = user;
       return result;
     } catch (error) {
       return error;

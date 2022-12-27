@@ -72,6 +72,7 @@ export class AuthService {
   }
 
   async refreshToken(userId: string, refreshToken: string) {
+    console.log('id', userId);
     const user = await this.userService.getUserById(userId);
     if (!user || !user.refreshToken) {
       throw new ForbiddenException();
