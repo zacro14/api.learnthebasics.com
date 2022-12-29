@@ -72,7 +72,6 @@ export class AuthService {
   }
 
   async refreshToken(userId: string, refreshToken: string) {
-    console.log('id', userId);
     const user = await this.userService.getUserById(userId);
     if (!user || !user.refreshToken) {
       throw new ForbiddenException();
@@ -105,7 +104,7 @@ export class AuthService {
         },
         {
           secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: '1d',
+          expiresIn: '30m',
         },
       ),
       this.jwtService.signAsync(

@@ -5,10 +5,9 @@ import {
   Post,
   Req,
   Request,
-  Res,
   UseGuards,
 } from '@nestjs/common';
-import { Request as RequestExpress, Response } from 'express';
+import { Request as RequestExpress } from 'express';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
 import { CreatUserDto } from 'src/users/dto/create-user.dto';
@@ -26,40 +25,24 @@ export class AuthController {
   }
 
   @Post('signin')
-  async signin(
-    @Body() data: AuthDto,
-    @Res({ passthrough: true })
-    res: Response,
-  ) {
+  async signin(@Body() data: AuthDto) {
     const { accessToken, refreshToken, user } = await this.authService.signin(
       data,
     );
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: true,
-    });
-    return { accessToken, user };
+
+    return { accessToken, refreshToken, user };
   }
 
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
-  async refreshTokens(
-    @Req() req: RequestExpress,
-    @Res({ passthrough: true })
-    res: Response,
-  ) {
+  async refreshTokens(@Req() req: RequestExpress) {
     const userId = req.user['sub'];
     const oldRefreshToken = req.user['refreshToken'];
 
-    const { accessToken, refreshToken } = await this.authService.refreshToken(
+    const { accessToken } = await this.authService.refreshToken(
       userId,
       oldRefreshToken,
     );
-
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: true,
-    });
 
     return { accessToken };
   }
