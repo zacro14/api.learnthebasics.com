@@ -33,6 +33,7 @@ export class AuthController {
     return { accessToken, refreshToken, user };
   }
 
+  //NOTE: error in refresh token bearer
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
   async refreshTokens(@Req() req: RequestExpress) {

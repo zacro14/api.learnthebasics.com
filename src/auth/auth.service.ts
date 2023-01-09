@@ -73,20 +73,25 @@ export class AuthService {
 
   async refreshToken(userId: string, refreshToken: string) {
     const user = await this.userService.getUserById(userId);
+
     if (!user || !user.refreshToken) {
       throw new ForbiddenException();
     }
+
+    console.log('refresh token', refreshToken);
     const refreshTokenMatch = await argon2.verify(
       user.refreshToken,
       refreshToken,
     );
+
+    console.log('is match', refreshTokenMatch);
 
     if (!refreshTokenMatch) {
       throw new ForbiddenException();
     }
 
     const tokens = await this.getTokens(user.id, user.username, user.role);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    // await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }
 
