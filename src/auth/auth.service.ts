@@ -77,7 +77,7 @@ export class AuthService {
     if (!user || !user.refreshToken) {
       throw new ForbiddenException();
     }
-
+    console.log('user', user);
     console.log('refresh token', refreshToken);
     const refreshTokenMatch = await argon2.verify(
       user.refreshToken,

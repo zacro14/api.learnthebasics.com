@@ -25,4 +25,19 @@ export class CategoryService {
   async getAllLessonsCategory(): Promise<any> {
     return await this.prisma.lessonCategory.findMany();
   }
+
+  async update(id: string, categoryDto: CreateCategoryDto): Promise<any> {
+    try {
+      return await this.prisma.lessonCategory.update({
+        where: {
+          id: id,
+        },
+        data: {
+          ...categoryDto,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
 }

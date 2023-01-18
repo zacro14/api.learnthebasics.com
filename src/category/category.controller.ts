@@ -4,6 +4,8 @@ import {
   Controller,
   Get,
   NotFoundException,
+  Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -40,5 +42,17 @@ export class CategoryController {
     }
 
     return lessonCategory;
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Patch(':id')
+  @Roles(Role.ADMIN)
+  async update(
+    @Param('id') id: string,
+    @Body() categoryDto: CreateCategoryDto,
+  ): Promise<any> {
+    const categoryResult = await this.categoryService.update(id, categoryDto);
+
+    return categoryResult;
   }
 }
