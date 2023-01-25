@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -54,5 +55,13 @@ export class CategoryController {
     const categoryResult = await this.categoryService.update(id, categoryDto);
 
     return categoryResult;
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Delete(':id')
+  @Roles(Role.ADMIN)
+  async deleteCategory(@Param('id') id: string): Promise<unknown> {
+    const deleteResponse = await this.categoryService.delete(id);
+    return deleteResponse;
   }
 }

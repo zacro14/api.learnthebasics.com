@@ -40,4 +40,16 @@ export class CategoryService {
       return error;
     }
   }
+
+  async delete(catId: string): Promise<unknown> {
+    try {
+      return await this.prisma.lessonCategory.delete({
+        where: {
+          id: catId,
+        },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
 }
