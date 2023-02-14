@@ -33,4 +33,13 @@ model LessonCategory {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
   description String
+  lessons Lesson[]
+}
+model Lesson {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  subject LessonCategory @relation(fields: [lessonId], references: [id])
+  title String
+  content Json
+  isDraft Boolean @default(true)
+ lessonId String @db.ObjectId
 }
