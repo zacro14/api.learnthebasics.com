@@ -7,6 +7,16 @@ export class LessonService {
   constructor(private prisma: PrismaService) {}
 
   async createLesson(lessonData: createLessonDto): Promise<any> {
-    return 'any';
+    try {
+      const lesson = await this.prisma.lesson.create({
+        data: {
+          ...lessonData,
+        },
+      });
+
+      return lesson;
+    } catch (error) {
+      return error;
+    }
   }
 }
